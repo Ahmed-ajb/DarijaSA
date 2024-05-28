@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Darija sentiment analyser</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 80%;
+            max-width: 600px;
+            height: 150px;
+            padding: 10px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        #results {
+            width: 80%;
+            max-width: 600px;
+            background-color: #ecf0f1;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1.2em;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        p {
+            margin: 0;
+            padding: 5px 0;
+        }
+    </style>
+    <script>
+        async function predictSentiment() {
+            const sentences = document.getElementById('sentences').value.split('\n');
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ sentences: sentences })
+            });
+            const data = await response.json();
+            document.getElementById('results').innerHTML = data.results.map(result => `<p>${result}</p>`).join('');
+        }
+    </script>
+</head>
+<body>
+    <h1>Sentiment Analyzer</h1>
+    <textarea id="sentences" placeholder="Enter sentences, one per line..."></textarea><br>
+    <button onclick="predictSentiment()">Predict Sentiment</button>
+    <h2>Results:</h2>
+    <div id="results"></div>
+</body>
+</html>
